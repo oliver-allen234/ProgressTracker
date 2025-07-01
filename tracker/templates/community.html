@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Community - Progress Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-4">Community Leaderboard</h1>
+            <p class="lead">See how users rank by number of completed tasks.</p>
+        </div>
+    </div>
+
+    {% if user_stats %}
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="card-title mb-0">User Rankings</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Rank</th>
+                                        <th>User</th>
+                                        <th>Goals Progress</th>
+                                        <th>Completed Tasks</th>
+                                        <th>Tasks in Progress</th>
+                                        <th>Total Hours</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for stat in user_stats %}
+                                        <tr class="{% if stat.is_current_user %}current-user{% endif %}">
+                                            <td>
+                                                <span class="badge {% if stat.is_current_user %}bg-warning{% else %}bg-primary{% endif %}">{{ forloop.counter }}</span>
+                                            </td>
+                                            <td>
+                                                {{ stat.user.username }}
+                                                {% if stat.is_current_user %}<span class="badge bg-warning ms-1">You</span>{% endif %}
+                                            </td>
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="progress flex-grow-1 me-2" style="height: 20px;">
+                                                        <div class="progress-bar {% if stat.is_current_user %}bg-warning{% else %}bg-success{% endif %}" role="progressbar" 
+                                                             style="width: {{ stat.goals_completion_percentage }}%;" 
+                                                             aria-valuenow="{{ stat.goals_completion_percentage }}" 
+                                                             aria-valuemin="0" 
+                                                             aria-valuemax="100">
+                                                            {{ stat.goals_completion_percentage }}%
+                                                        </div>
+                                                    </div>
+                                                    <span class="text-muted small">{{ stat.completed_goals_count }}/{{ stat.total_goals_count }}</span>
+                                                </div>
+                                            </td>
+                                            <td>{{ stat.completed_tasks_count }}</td>
+                                            <td>{{ stat.tasks_in_progress_count }}</td>
+                                            <td>{{ stat.total_hours }}</td>
+                                            <td>
+                                                <a href="{% url 'user-detail' stat.user.id %}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i> View Profile
+                                                </a>
+                                                {% if is_admin %}
+                                                    <a href="{% url 'delete-user' stat.user.id %}" class="btn btn-sm btn-outline-danger ms-1">
+                                                        <i class="bi bi-trash"></i> Remove
+                                                    </a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>There are no other users in the system yet.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+    .progress {
+        height: 20px;
+    }
+    .card {
+        margin-bottom: 20px;
+    }
+    .progress-bar {
+        transition: width 0.5s ease-in-out;
+    }
+
+    /* Styles for highlighting the current user */
+    tr.current-user {
+        background-color: rgba(255, 193, 7, 0.1) !important;
+        border-left: 4px solid #ffc107;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}My Tasks - Progress Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>My Tasks</h1>
+        <a href="{% url 'task-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New Task
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if tasks %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Priority</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr class="{% if task.is_completed %}table-success{% elif task.due_date and task.due_date < today %}table-danger{% endif %}">
+                            <td>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" 
+                                           {% if task.is_completed %}checked{% endif %}
+                                           onchange="window.location.href='{% url 'task-toggle' task.id %}'">
+                                    <label class="form-check-label {% if task.is_completed %}text-decoration-line-through{% endif %}">
+                                        {{ task.title }}
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge {% if task.status == 'TODO' %}bg-secondary{% elif task.status == 'IN_PROGRESS' %}bg-primary{% elif task.status == 'COMPLETED' %}bg-success{% else %}bg-warning{% endif %}">
+                                    {{ task.get_status_display }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge {% if task.priority == 'HIGH' %}bg-danger{% elif task.priority == 'MEDIUM' %}bg-warning{% else %}bg-info{% endif %}">
+                                    {{ task.get_priority_display }}
+                                </span>
+                            </td>
+                            <td>{{ task.due_date|default:"No due date" }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{% url 'task-update' task.id %}" class="btn btn-outline-primary">Edit</a>
+                                    {% if user.is_staff %}
+                                    <a href="{% url 'task-delete' task.id %}" class="btn btn-outline-danger">Delete</a>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>You don't have any tasks yet. <a href="{% url 'task-create' %}">Create your first task</a>.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+    .table-responsive {
+        margin-bottom: 1rem;
+    }
+    .form-check-input {
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
