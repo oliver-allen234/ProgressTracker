@@ -21,7 +21,7 @@ class Category(models.Model):
     """
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    color = models.CharField(max_length=7, default='#007bff')  # Hex color code
+    color = models.CharField(max_length=7, default='#007bff')
 
     def __str__(self):
         return self.name
@@ -153,7 +153,7 @@ class Progress(models.Model):
     goal = models.ForeignKey(Goal, on_delete=models.CASCADE, related_name='progress_updates')
     date = models.DateField(default=timezone.now)
     note = models.TextField()
-    value = models.FloatField(default=0)  # For numerical progress tracking
+    value = models.FloatField(default=0)
 
     def __str__(self):
         return f"Progress for {self.goal.title} on {self.date}"

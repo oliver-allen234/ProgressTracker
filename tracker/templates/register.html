@@ -29,7 +29,6 @@
                             </div>
                         {% endfor %}
 
-                        <!-- Admin checkbox - for testing purposes only, remove in production -->
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin" value="true">
                             <label class="form-check-label" for="is_admin">Register as Admin (Testing Only)</label>
@@ -51,12 +50,9 @@
 
 {% block extra_css %}
 <style>
-    /* Style for form fields */
     .form-control, .form-select {
         width: 100%;
     }
-
-    /* Style for error messages */
     .errorlist {
         color: #dc3545;
         list-style-type: none;

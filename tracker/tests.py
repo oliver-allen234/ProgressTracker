@@ -4,24 +4,20 @@ from django.utils import timezone
 from datetime import timedelta
 from .models import Profile, Category, Goal, Task, Progress
 
-# Create your tests here.
 class ModelTests(TestCase):
     def setUp(self):
-        # Create test user
         self.user = User.objects.create_user(
             username='testuser',
             email='test@example.com',
             password='testpassword'
         )
 
-        # Create profile for test user
         self.profile = Profile.objects.create(
             user=self.user,
             bio='Test bio',
-            birth_date=timezone.now().date() - timedelta(days=365*25)  # 25 years ago
+            birth_date=timezone.now().date() - timedelta(days=365*25)
         )
 
-        # Create categories
         self.category1 = Category.objects.create(
             name='Work',
             description='Work-related goals',
@@ -34,7 +30,6 @@ class ModelTests(TestCase):
             color='#00ff00'
         )
 
-        # Create a goal
         self.goal = Goal.objects.create(
             user=self.user,
             title='Learn Django',
@@ -45,10 +40,8 @@ class ModelTests(TestCase):
             target_date=timezone.now().date() + timedelta(days=30)
         )
 
-        # Add categories to goal
         self.goal.categories.add(self.category1)
 
-        # Create tasks for the goal
         self.task1 = Task.objects.create(
             goal=self.goal,
             title='Complete Django tutorial',
@@ -65,7 +58,6 @@ class ModelTests(TestCase):
             due_date=timezone.now().date() + timedelta(days=14)
         )
 
-        # Create progress update for the goal
         self.progress = Progress.objects.create(
             goal=self.goal,
             date=timezone.now().date(),
@@ -96,11 +88,9 @@ class ModelTests(TestCase):
         self.assertEqual(self.goal.categories.count(), 1)
         self.assertEqual(self.goal.categories.first(), self.category1)
 
-        # Add another category
         self.goal.categories.add(self.category2)
         self.assertEqual(self.goal.categories.count(), 2)
 
-        # Test reverse relationship
         self.assertEqual(self.category1.goals.count(), 1)
         self.assertEqual(self.category1.goals.first(), self.goal)
 
@@ -119,17 +109,13 @@ class ModelTests(TestCase):
 
     def test_goal_completion_percentage(self):
         """Test the get_completion_percentage method"""
-        # 1 out of 2 tasks completed = 50%
         self.assertEqual(self.goal.get_completion_percentage(), 50)
 
-        # Complete the second task
         self.task2.is_completed = True
         self.task2.save()
 
-        # Now should be 100%
         self.assertEqual(self.goal.get_completion_percentage(), 100)
 
-        # Test with no tasks
         new_goal = Goal.objects.create(
             user=self.user,
             title='Empty Goal',
