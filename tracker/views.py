@@ -577,6 +577,10 @@ def community_view(request):
     # Get all users including the current user
     users = User.objects.all().order_by('username')
     sort_by = request.GET.get('sort_by', 'completed_tasks_count')  # Default sort
+    valid_sorts = ['completed_goals_count', 'total_goals_count', 'total_hours', 'completed_tasks_count']
+
+    if sort_by not in valid_sorts:
+        sort_by = 'completed_tasks_count'
 
     # Calculate statistics for each user
     user_stats = []
@@ -628,7 +632,7 @@ def community_view(request):
 
     # Sort users by completed tasks count (descending)
     if sort_by in ['completed_goals_count', 'total_goals_count', 'goals_completion_percentage', 'completed_tasks_count',
-                   'total_hours']:
+                   'total_hours', 'tasks_in_progress_count']:
         user_stats.sort(key=lambda x: x[sort_by], reverse=True)
     else:
         user_stats.sort(key=lambda x: x['completed_tasks_count'], reverse=True)  # Fallback

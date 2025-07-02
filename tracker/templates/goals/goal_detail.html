@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ goal.title }} - Progress Tracker{% endblock %}
+{% block title %}{{ goal.title }} - Trackwise{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -51,30 +51,6 @@
                             <span class="badge {% if goal.priority == 'HIGH' %}bg-danger{% elif goal.priority == 'MEDIUM' %}bg-warning{% else %}bg-info{% endif %}">
                                 {{ goal.get_priority_display }}
                             </span>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3 fw-bold">Categories:</div>
-                        <div class="col-md-9">
-                            {% if goal.categories.all %}
-                                {% for category in goal.categories.all %}
-                                    <span class="badge" style="background-color: {{ category.color }}">{{ category.name }}</span>
-                                {% endfor %}
-                            {% else %}
-                                <span class="text-muted">No categories assigned.</span>
-                            {% endif %}
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3 fw-bold">Target Date:</div>
-                        <div class="col-md-9">
-                            {% if goal.target_date %}
-                                <span class="{% if goal.get_days_until_target < 0 %}text-danger{% elif goal.get_days_until_target == 0 %}text-warning{% elif goal.get_days_until_target <= 7 %}text-primary{% else %}text-success{% endif %}">
-                                    {{ goal.target_date|date:"F j, Y" }} ({{ goal.get_target_date_status }})
-                                </span>
-                            {% else %}
-                                <span class="text-muted">No target date set</span>
-                            {% endif %}
                         </div>
                     </div>
                     <div class="row mb-3">

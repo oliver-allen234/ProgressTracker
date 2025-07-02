@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Progress Tracker{% endblock %}
+{% block title %}Dashboard - Trackwise{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <h1 class="mb-4">Welcome <span style="font-style: italic">{{ user.username }}</span>, to Progress Tracker!</h1>
+    <div class="container pt-2">
+        <h1 class="mb-4">Welcome {{ user.username }}, to <span class="navbar-brand fw-bold text-primary">Trackwise!</span></h1>
 
         {% if user.is_authenticated %}
             <div class="row mb-4">
