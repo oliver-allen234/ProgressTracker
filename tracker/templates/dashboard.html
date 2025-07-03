@@ -104,6 +104,7 @@
                                             <th>Title</th>
                                             <th>Status</th>
                                             <th>Priority</th>
+                                            <th>Target Date</th>
                                             <th>Progress</th>
                                             <th>Actions</th>
                                         </tr>
@@ -127,6 +128,7 @@
                                                         {{ goal.get_priority_display }}
                                                     </span>
                                                 </td>
+                                                <td>{{ goal.target_date|default:"No target date" }}</td>
                                                 <td>
                                                     <div class="progress">
                                                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"

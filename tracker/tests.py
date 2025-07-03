@@ -18,7 +18,6 @@ class ModelTests(TestCase):
             birth_date=timezone.now().date() - timedelta(days=365*25)
         )
 
-        # Create a goal
         self.goal = Goal.objects.create(
             user=self.user,
             title='Learn Django',

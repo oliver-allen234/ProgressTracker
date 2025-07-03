@@ -198,14 +198,20 @@ class AdminUserTaskForm(UserTaskForm):
 class TaskListView(LoginRequiredMixin, ListView):
     model = UserTask
     template_name = 'tasks/task_list.html'
-    context_object_name = 'tasks'
+    context_object_name = 'user_tasks'
 
     def get_queryset(self):
-        return UserTask.objects.filter(user=self.request.user).order_by('due_date', 'priority')
+        return UserTask.objects.filter(
+            user=self.request.user
+        ).order_by('due_date', 'priority')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['today'] = timezone.now().date()
+        context['today'] = timezone.now().date()
+        context['goal_tasks'] = Task.objects.filter(
+            goal__user=self.request.user
+        ).order_by('due_date', 'created_at')
         return context
 
 
@@ -423,7 +429,8 @@ def add_task_to_goal(request, goal_id):
                 title=task.title,
                 description=task.description,
                 is_completed=task.is_completed,
-                due_date=task.due_date
+                due_date=task.due_date,
+                completed_date=task.completed_date if task.is_completed else None
             )
 
             messages.success(request, f'Task "{task.title}" added to goal "{goal.title}".')
@@ -579,25 +586,25 @@ def community_view(request):
             goals_completion_percentage = int((completed_goals_count / total_goals_count) * 100)
 
         completed_tasks_count = (
-            UserTask.objects.filter(
-                user=user,
-                is_completed=True
-            ).count()
-            + Task.objects.filter(
-        goal__user=user,
-        is_completed=True
-            ).count()
+                UserTask.objects.filter(
+                    user=user,
+                    is_completed=True
+                ).count()
+                + Task.objects.filter(
+            goal__user=user,
+            is_completed=True
+        ).count()
         )
 
         tasks_in_progress_count = (
-            UserTask.objects.filter(
-                user=user,
-                is_completed=False
-            ).count()
-            + Task.objects.filter(
-        goal__user=user,
-        is_completed=False
-            ).count()
+                UserTask.objects.filter(
+                    user=user,
+                    is_completed=False
+                ).count()
+                + Task.objects.filter(
+            goal__user=user,
+            is_completed=False
+        ).count()
         )
 
         total_hours = HourLog.objects.filter(
