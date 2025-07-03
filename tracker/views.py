@@ -212,6 +212,7 @@ class TaskListView(LoginRequiredMixin, ListView):
         context['goal_tasks'] = Task.objects.filter(
             goal__user=self.request.user
         ).order_by('due_date', 'created_at')
+        context['all_tasks'] = list(context['user_tasks']) + list(context['goal_tasks'])
         return context
 
 
@@ -819,10 +820,8 @@ def task_completion_data(request):
     data = []
     current = start_date
     for _ in range(7):
-        data.append({
-            'date': current.strftime('%Y-%m-%d'),
-            'count': counts.get(current, 0)
-        })
+        data.append({'date': current.strftime('%Y-%m-%d'), 'count': counts.get(current, 0)})
         current += timedelta(days=1)
 
     return JsonResponse(data, safe=False)
+
