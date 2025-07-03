@@ -48,10 +48,10 @@
                     <p class="card-text">goals completed</p>
                     {% if total_goals_count > 0 %}
                         <div class="progress w-75 mt-2">
-                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" 
-                                 style="width: {{ goals_completion_percentage }}%;" 
-                                 aria-valuenow="{{ goals_completion_percentage }}" 
-                                 aria-valuemin="0" 
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                 style="width: {{ goals_completion_percentage }}%;"
+                                 aria-valuenow="{{ goals_completion_percentage }}"
+                                 aria-valuemin="0"
                                  aria-valuemax="100">
                                 {{ goals_completion_percentage }}%
                             </div>
@@ -144,7 +144,7 @@
                                             <td>{{ goal.target_date|default:"No target date" }}</td>
                                             <td>
                                                 <div class="progress">
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ goal.get_completion_percentage }}%;" 
+                                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" style="width: {{ goal.get_completion_percentage }}%;"
                                                          aria-valuenow="{{ goal.get_completion_percentage }}" aria-valuemin="0" aria-valuemax="100">
                                                         {{ goal.get_completion_percentage }}%
                                                     </div>

@@ -41,10 +41,16 @@ class RegularUserMixin(UserPassesTestMixin):
 
 @login_required
 def dashboard(request):
-    completed_tasks_count = UserTask.objects.filter(
-        user=request.user,
+    completed_tasks_count = (
+            UserTask.objects.filter(
+                user=request.user,
+                is_completed=True
+            ).count()
+            + Task.objects.filter(
+        goal__user=request.user,
         is_completed=True
     ).count()
+    )
 
     total_goals_count = Goal.objects.filter(
         user=request.user
@@ -82,10 +88,16 @@ def dashboard(request):
         if user_total_goals_count > 0:
             user_goals_completion_percentage = int((user_completed_goals_count / user_total_goals_count) * 100)
 
-        user_completed_tasks_count = UserTask.objects.filter(
-            user=user,
+        user_completed_tasks_count = (
+                UserTask.objects.filter(
+                    user=user,
+                    is_completed=True
+                ).count()
+                + Task.objects.filter(
+            goal__user=user,
             is_completed=True
         ).count()
+        )
 
         user_stats.append({
             'user': user,
@@ -541,8 +553,13 @@ def community_view(request):
     """
     users = User.objects.all().order_by('username')
     sort_by = request.GET.get('sort_by', 'completed_tasks_count')
-    valid_sorts = ['completed_goals_count', 'total_goals_count', 'total_hours', 'completed_tasks_count']
-
+    valid_sorts = [
+        'completed_goals_count',
+        'total_goals_count',
+        'total_hours',
+        'completed_tasks_count',
+        'tasks_in_progress_count',
+    ]
     if sort_by not in valid_sorts:
         sort_by = 'completed_tasks_count'
 
@@ -561,15 +578,27 @@ def community_view(request):
         if total_goals_count > 0:
             goals_completion_percentage = int((completed_goals_count / total_goals_count) * 100)
 
-        completed_tasks_count = UserTask.objects.filter(
-            user=user,
-            is_completed=True
-        ).count()
+        completed_tasks_count = (
+            UserTask.objects.filter(
+                user=user,
+                is_completed=True
+            ).count()
+            + Task.objects.filter(
+        goal__user=user,
+        is_completed=True
+            ).count()
+        )
 
-        tasks_in_progress_count = UserTask.objects.filter(
-            user=user,
-            is_completed=False
-        ).count()
+        tasks_in_progress_count = (
+            UserTask.objects.filter(
+                user=user,
+                is_completed=False
+            ).count()
+            + Task.objects.filter(
+        goal__user=user,
+        is_completed=False
+            ).count()
+        )
 
         total_hours = HourLog.objects.filter(
             goal__user=user
@@ -621,10 +650,16 @@ def user_detail_view(request, user_id):
     if total_goals_count > 0:
         goals_completion_percentage = int((completed_goals_count / total_goals_count) * 100)
 
-    completed_tasks_count = UserTask.objects.filter(
-        user=user,
+    completed_tasks_count = (
+            UserTask.objects.filter(
+                user=user,
+                is_completed=True
+            ).count()
+            + Task.objects.filter(
+        goal__user=user,
         is_completed=True
     ).count()
+    )
 
     total_hours = HourLog.objects.filter(
         goal__user=user
@@ -653,10 +688,16 @@ def user_detail_view(request, user_id):
         if user_total_goals_count > 0:
             user_goals_completion_percentage = int((user_completed_goals_count / user_total_goals_count) * 100)
 
-        user_completed_tasks_count = UserTask.objects.filter(
-            user=u,
+        user_completed_tasks_count = (
+                UserTask.objects.filter(
+                    user=u,
+                    is_completed=True
+                ).count()
+                + Task.objects.filter(
+            goal__user=u,
             is_completed=True
         ).count()
+        )
 
         user_stats.append({
             'user': u,

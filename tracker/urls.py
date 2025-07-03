@@ -12,6 +12,7 @@ urlpatterns = [
     path('tasks/<int:pk>/delete/', views.TaskDeleteView.as_view(), name='task-delete'),
     path('tasks/<int:pk>/toggle/', views.toggle_task_completion, name='task-toggle'),
     path('tasks/completion-data/', views.task_completion_data, name='task-completion-data'),
+    path('users/<int:user_id>/completion-data/', views.task_completion_data, name='task-completion-data'),
 
     path('goals/', views.GoalListView.as_view(), name='goal-list'),
     path('goals/create/', views.GoalCreateView.as_view(), name='goal-create'),

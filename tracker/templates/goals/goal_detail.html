@@ -236,17 +236,14 @@
 {% block extra_js %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Get all task checkboxes
         const taskCheckboxes = document.querySelectorAll('.task-checkbox');
 
-        // Add click event listener to each checkbox
         taskCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
                 const taskId = this.dataset.taskId;
                 const goalId = this.dataset.goalId;
                 const isCompleted = this.checked;
 
-                // Update the UI immediately
                 const row = this.closest('tr');
                 if (isCompleted) {
                     row.classList.add('table-success');
@@ -260,7 +257,6 @@
                     row.querySelector('.badge').className = 'badge bg-secondary';
                 }
 
-                // Send AJAX request to update the task
                 fetch(`/goals/${goalId}/tasks/${taskId}/toggle/`, {
                     method: 'POST',
                     headers: {
@@ -270,13 +266,11 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Update the progress bar
                     const progressBar = document.querySelector('.progress-bar');
                     progressBar.style.width = `${data.completion_percentage}%`;
                     progressBar.setAttribute('aria-valuenow', data.completion_percentage);
                     progressBar.textContent = `${data.completion_percentage}%`;
 
-                    // Update any task count displays
                     document.querySelectorAll('.task-count').forEach(el => {
                         el.textContent = data.total_tasks;
                     });
@@ -289,7 +283,6 @@
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    // Revert UI changes if there was an error
                     this.checked = !isCompleted;
                     if (!isCompleted) {
                         row.classList.add('table-success');
@@ -306,7 +299,6 @@
             });
         });
 
-        // Function to get CSRF token from cookies
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {

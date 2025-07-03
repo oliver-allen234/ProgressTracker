@@ -1,5 +1,4 @@
-# Progress Tracker
-
+# Trackwise 
 A Django application for tracking personal goals and progress.
 
 ## User Roles and Permissions
@@ -41,8 +40,6 @@ Admin capabilities should primarily be used for:
 - User support (helping users who are having issues)
 - Managing global categories and settings
 - Data cleanup when necessary
-
-For more detailed information about permissions, see the [PERMISSIONS.md](PERMISSIONS.md) file.
 
 ## Getting Started
 
