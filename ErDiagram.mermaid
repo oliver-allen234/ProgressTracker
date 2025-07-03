@@ -1,0 +1,60 @@
+
+
+erDiagram
+
+    USER ||--|| PROFILE        : extends
+    USER ||--o{ GOAL           : "owns goals"
+    USER ||--o{ USERTASK       : "personal tasks"
+%%    USER }o--|| ROLE           : "has role"
+
+    GOAL ||--o{ TASK           : "has tasks"
+    GOAL ||--o{ PROGRESS       : "tracks progress"
+    GOAL ||--o{ HOURLOG        : "logs hours"
+
+    %% New entity for roles
+%%    ROLE {
+%%      int    id PK
+%%      string name        "e.g. 'admin', 'user'"
+%%      text   description
+%%    }
+
+    %% All your existing entities
+    PROFILE {
+      int     id PK
+      int     user_id FK
+      string  bio
+      datetime created_at
+    }
+    GOAL {
+      int     id PK
+      int     user_id FK
+      string  title
+      text    description
+      datetime created_at
+    }
+    TASK {
+      int     id PK
+      int     goal_id FK
+      string  title
+      boolean completed
+      datetime due_date
+    }
+    PROGRESS {
+      int     id PK
+      int     goal_id FK
+      date    date
+      int     percent_complete
+    }
+    HOURLOG {
+      int     id PK
+      int     goal_id FK
+      date    date
+      float   hours
+    }
+    USERTASK {
+      int     id PK
+      int     user_id FK
+      string  title
+      boolean done
+      datetime due_date
+    }
