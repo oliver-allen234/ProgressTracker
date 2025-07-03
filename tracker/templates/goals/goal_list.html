@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}My Goals - Progress Tracker{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>My Goals</h1>
+        <a href="{% url 'goal-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Add New Goal
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if goals %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for goal in goals %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-header d-flex justify-content-between align-items-center 
+                                    {% if goal.status == 'NOT_STARTED' %}bg-secondary text-white
+                                    {% elif goal.status == 'IN_PROGRESS' %}bg-primary text-white
+                                    {% elif goal.status == 'COMPLETED' %}bg-success text-white
+                                    {% else %}bg-warning text-dark{% endif %}">
+                            <span>{{ goal.get_status_display }}</span>
+                            <span class="badge {% if goal.priority == 'HIGH' %}bg-danger
+                                             {% elif goal.priority == 'MEDIUM' %}bg-warning text-dark
+                                             {% else %}bg-info text-white{% endif %}">
+                                {{ goal.get_priority_display }}
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <a href="{% url 'goal-detail' goal.id %}" class="text-decoration-none">
+                                    {{ goal.title }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted small">
+                                {{ goal.description|truncatechars:100 }}
+                            </p>
+
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between mb-1">
+                                    <span class="small">Progress</span>
+                                    <span class="small fw-bold">{{ goal.get_completion_percentage }}%</span>
+                                </div>
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" 
+                                         role="progressbar" 
+                                         style="width: {{ goal.get_completion_percentage }}%;" 
+                                         aria-valuenow="{{ goal.get_completion_percentage }}" 
+                                         aria-valuemin="0" 
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if goal.target_date %}
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="bi bi-calendar-event me-2"></i>
+                                <span class="small {% if goal.get_days_until_target < 0 %}text-danger
+                                                  {% elif goal.get_days_until_target == 0 %}text-warning
+                                                  {% elif goal.get_days_until_target <= 7 %}text-primary
+                                                  {% else %}text-success{% endif %}">
+                                    {{ goal.target_date|date:"M d, Y" }}
+                                    ({{ goal.get_target_date_status }})
+                                </span>
+                            </div>
+                            {% endif %}
+
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-list-check me-2"></i>
+                                <span class="small">{{ goal.tasks.count }} tasks</span>
+                                {% if goal.tasks.count > 0 %}
+                                <span class="mx-2">•</span>
+                                <i class="bi bi-check-circle-fill me-1 text-success"></i>
+                                <span class="small">{{ goal.get_completion_percentage }}% completed</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent d-flex justify-content-between">
+                            <a href="{% url 'create-task-for-goal' goal.id %}" class="btn btn-sm btn-outline-success">
+                                <i class="bi bi-plus-circle"></i> Add Task
+                            </a>
+                            <div>
+                                <a href="{% url 'goal-update' goal.id %}" class="btn btn-sm btn-outline-primary me-1">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                {% if user.is_staff %}
+                                <a href="{% url 'goal-delete' goal.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            <p>You don't have any goals yet. <a href="{% url 'goal-create' %}">Create your first goal</a>.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<style>
+    .card {
+        transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        border: none;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
+    .card-title {
+        font-weight: 600;
+    }
+    .progress {
+        height: 10px;
+        border-radius: 5px;
+        background-color: rgba(0,0,0,0.05);
+    }
+    .progress-bar {
+        border-radius: 5px;
+    }
+    .card-header {
+        font-weight: 500;
+    }
+    .card-footer {
+        border-top: 1px solid rgba(0,0,0,0.05);
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    .badge {
+        font-weight: 500;
+        padding: 0.4em 0.6em;
+    }
+</style>
+{% endblock %}
