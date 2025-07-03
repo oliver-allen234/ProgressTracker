@@ -54,7 +54,6 @@ python manage.py runserver
 ```markdown
 ## Requirements
 
-```txt
 asgiref==3.8.1
 colorama==0.4.6
 Django==5.2.1
