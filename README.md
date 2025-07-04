@@ -10,6 +10,19 @@ Designed for individuals or small teams to take control of their development!
 - Dashboard with performance visualisation and competitive leaderboard
 - Role-based access, Admin controls for teams
 
+## Design Patterns
+
+**MVC Pattern**
+Trackwise follows the Model-View-Controller design pattern implementation through Django's framework. This separates business logic from presentation logic, making the development and testing process more efficient.
+
+**Models** handles the data structure and relationships (e.g., Goal, Task, UserTask). Indicated here: ErDiagram.mermaid
+
+**Views** manages the core logic and user variables (e.g., goal creation, leaderboard filtering).
+
+**Templates** act as the frontend (HTML), creating a visual structure 
+
+
+
 ## Getting Started
 
 Check out the deployed application - https://oliverallen234.pythonanywhere.com/
