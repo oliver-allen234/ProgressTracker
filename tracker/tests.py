@@ -64,20 +64,17 @@ class ModelTests(TestCase):
         self.assertEqual(self.goal.status, 'IN_PROGRESS')
 
     def test_task_creation(self):
-        """Test that tasks are created correctly"""
         self.assertEqual(Task.objects.count(), 2)
         self.assertEqual(self.task1.__str__(), 'Complete Django tutorial')
         self.assertTrue(self.task1.is_completed)
         self.assertFalse(self.task2.is_completed)
 
     def test_progress_creation(self):
-        """Test that progress updates are created correctly"""
         self.assertEqual(Progress.objects.count(), 1)
         self.assertEqual(self.progress.value, 25.0)
         self.assertIn('Progress for Learn Django', self.progress.__str__())
 
     def test_goal_completion_percentage(self):
-        """Test the get_completion_percentage method"""
         self.assertEqual(self.goal.get_completion_percentage(), 50)
 
         self.task2.is_completed = True
