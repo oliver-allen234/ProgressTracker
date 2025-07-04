@@ -15,7 +15,7 @@ Designed for individuals or small teams to take control of their development!
 **MVC Pattern**
 Trackwise follows the Model-View-Controller design pattern implementation through Django's framework. This separates business logic from presentation logic, making the development and testing process more efficient.
 
-**Models** handles the data structure and relationships (e.g., Goal, Task, UserTask). Indicated here: ErDiagram.mermaid
+**Models** handles the data structure and relationships (e.g., Goal, Task, UserTask). Indicated here: [ER Diagram (Mermaid format)](er-diagram.mermaid)
 
 **Views** manages the core logic and user variables (e.g., goal creation, leaderboard filtering).
 
@@ -78,4 +78,13 @@ tzdata==2025.2
 ## User Roles
 
 - **Admin**: Full access to all user data, edit/delete rights
-- **Regular User**: Can only see and manage their own data
+- **Regular User**: Can only see and manage their data
+
+## Test Suite
+
+The application includes a test suite through Django’s built-in `TestCase`.
+
+To run the tests:
+
+```bash
+python manage.py test
