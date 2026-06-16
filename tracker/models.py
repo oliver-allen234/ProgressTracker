@@ -202,3 +202,40 @@ class UserTask(models.Model):
 
     class Meta:
         ordering = ['due_date', 'priority', 'created_at']
+
+class Training(models.Model):
+    """
+    Training sessions with a foreign key to User (one-to-many)
+    """
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    category = models.CharField(max_length=100, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_trainings')
+    estimated_hours = models.DecimalField(help_text="Duration of the training session", max_digits=4, decimal_places=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+class TrainingAssignment(models.Model):
+    """
+    Assignments of training sessions to users with a foreign key to Training (one-to-many)
+    """
+    STATUS_CHOICES = [
+        ('ASSIGNED', 'Assigned'),
+        ('IN_PROGRESS', 'In Progress'),
+        ('COMPLETED', 'Completed')
+    ]
+
+    training = models.ForeignKey(Training, on_delete=models.CASCADE, related_name='assignments')
+    trainee = models.ForeignKey(User, on_delete=models.CASCADE, related_name='trainee_assignments')
+    assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='manager_assignments')
+    assigned_date = models.DateField(auto_now_add=True)
+    completed_date = models.DateField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ASSIGNED')
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.training.title} assigned to {self.trainee.username}"
