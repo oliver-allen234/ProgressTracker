@@ -112,6 +112,19 @@ def dashboard(request):
 
     top_users = user_stats[:3] if user_stats else []
 
+    training_stats = []
+    if request.user.is_staff:
+        for training in Training.objects.filter(is_active=True):
+            total = TrainingAssignment.objects.filter(training=training).count()
+            completed = TrainingAssignment.objects.filter(training=training, status='COMPLETED').count()
+            rate = int((completed / total) * 100) if total > 0 else 0
+            training_stats.append({
+                'training': training,
+                'total': total,
+                'completed': completed,
+                'rate': rate,
+            })
+
     context = {
         'completed_tasks_count': completed_tasks_count,
         'total_goals_count': total_goals_count,
@@ -120,6 +133,7 @@ def dashboard(request):
         'current_goals': current_goals,
         'top_users': top_users,
         'is_admin': request.user.is_staff,
+        'training_stats': training_stats,
     }
 
     return render(request, 'dashboard.html', context)
