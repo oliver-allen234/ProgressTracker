@@ -18,9 +18,7 @@ from .models import UserTask, Goal, Task, HourLog, Profile, Progress, TrainingAs
 
 
 class AdminRequiredMixin(UserPassesTestMixin):
-    """
-    Mixin that requires the user to be an admin (staff)
-    """
+    raise_exception = True
 
     def test_func(self):
         return self.request.user.is_staff
