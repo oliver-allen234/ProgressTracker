@@ -72,25 +72,26 @@ Adapting ProgressTracker into **Trackwise**: a dual-purpose web app that functio
 - [x] `assignments/assignment_list.html`
 - [x] `assignments/assignment_form.html`
 - [x] `assignments/assignment_confirm_delete.html`
-- [ ] Update `dashboard.html` — manager view shows team completion rates
+- [x] Update `dashboard.html` — manager view shows team completion rates
 - [x] Update `base.html` — add nav links for Training and Assignments
 
 ### 6. Manager Dashboard
-- [ ] Team completion rate per training module
+- [x] Team completion rate per training module
 - [ ] Per-user assignment status overview
 - [ ] Replace competitive leaderboard with compliance summary for staff view
 
 ### 7. OWASP Security (must demonstrate 3+)
-- [ ] **A01 Broken Access Control** — enforce `is_staff` on all Training CUD views; enforce `trainee=request.user` on assignment updates; add tests proving non-owners are blocked
+- [x] **A01 Broken Access Control** — `AdminRequiredMixin` with `raise_exception=True` enforces `is_staff` on all Training CUD and Assignment CUD views; `AssignmentUpdateView.test_func` blocks cross-user updates; tests prove non-owners receive 403
 - [ ] **A03 SQL Injection** — document ORM usage, no raw SQL; add to report
 - [ ] **A07 CSRF** — verify `{% csrf_token %}` in all forms; demonstrate a POST without token is rejected
+- [x] Added `403.html` template for clean forbidden responses in production
 - [ ] Capture screenshots/video evidence of each defence
 
 ### 8. Testing
-- [ ] Model tests — `Training`, `TrainingAssignment` field validation
-- [ ] View tests — auth checks (logged-out redirect, non-staff blocked)
-- [ ] Access control tests — regular user cannot access another user's assignment
-- [ ] Security tests — CSRF, ownership enforcement
+- [x] Model tests — `Training`, `TrainingAssignment` field validation
+- [x] View tests — auth checks (logged-out redirect, non-staff blocked with 403)
+- [x] Access control tests — regular user cannot access another user's assignment
+- [ ] Security tests — CSRF token enforcement (add to report evidence)
 
 ### 9. DevOps Artefacts (Task 3)
 - [ ] GitHub Actions CI workflow (`.github/workflows/django.yml`) — runs tests on push
