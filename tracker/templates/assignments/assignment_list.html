@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Assignments - Trackwise{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>{% if user.is_staff %}All Assignments{% else %}My Assignments{% endif %}</h1>
+    {% if user.is_staff %}
+        <a href="{% url 'assignment-create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Assign Training
+        </a>
+    {% endif %}
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+{% if assignments %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Training Module</th>
+                    {% if user.is_staff %}<th>Trainee</th>{% endif %}
+                    <th>Status</th>
+                    <th>Assigned Date</th>
+                    <th>Due Date</th>
+                    {% if user.is_staff %}<th>Assigned By</th>{% endif %}
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assignment in assignments %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'training-detail' assignment.training.pk %}">{{ assignment.training.title }}</a>
+                        </td>
+                        {% if user.is_staff %}
+                            <td>{{ assignment.trainee.username }}</td>
+                        {% endif %}
+                        <td>
+                            <span class="badge
+                                {% if assignment.status == 'ASSIGNED' %}bg-secondary
+                                {% elif assignment.status == 'IN_PROGRESS' %}bg-primary
+                                {% else %}bg-success{% endif %}">
+                                {{ assignment.get_status_display }}
+                            </span>
+                        </td>
+                        <td>{{ assignment.assigned_date|date:"d M Y" }}</td>
+                        <td>{{ assignment.due_date|date:"d M Y"|default:"—" }}</td>
+                        {% if user.is_staff %}
+                            <td>{{ assignment.assigned_by.username }}</td>
+                        {% endif %}
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'assignment-update' assignment.pk %}" class="btn btn-outline-primary">
+                                    {% if user.is_staff %}Edit{% else %}Update Status{% endif %}
+                                </a>
+                                {% if user.is_staff %}
+                                    <a href="{% url 'assignment-delete' assignment.pk %}" class="btn btn-outline-danger">Delete</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        {% if user.is_staff %}
+            No assignments found. <a href="{% url 'assignment-create' %}">Create the first assignment</a>.
+        {% else %}
+            You have no training assignments yet.
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

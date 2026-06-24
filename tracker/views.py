@@ -248,16 +248,23 @@ class TrainingDetailView(LoginRequiredMixin, DetailView):
 class TrainingCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
     model = Training
     form_class = TrainingForm
-    template_name = 'training_form.html'
+    template_name = 'trainings/training_form.html'
+    success_url = reverse_lazy('training-list')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
+        messages.success(self.request, 'Training module created successfully!')
         return super().form_valid(form)
 
 class TrainingUpdateView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
     model = Training
     form_class = TrainingForm
-    template_name = 'training_form.html'
+    template_name = 'trainings/training_form.html'
+    success_url = reverse_lazy('training-list')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Training module updated successfully!')
+        return super().form_valid(form)
 
 class TrainingDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
     model = Training
@@ -914,9 +921,11 @@ class AssignmentCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
     model = TrainingAssignment
     form_class = AdminAssignmentForm
     template_name = 'assignments/assignment_form.html'
+    success_url = reverse_lazy('assignment-list')
 
     def form_valid(self, form):
         form.instance.assigned_by = self.request.user
+        messages.success(self.request, 'Assignment created successfully!')
         return super().form_valid(form)
 
 class AssignmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -932,8 +941,20 @@ class AssignmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         assignment = self.get_object()
         return self.request.user.is_staff or assignment.trainee == self.request.user
 
+    def get_success_url(self):
+        return reverse_lazy('assignment-list')
+
     def form_valid(self, form):
         if not self.request.user.is_staff:
             form.instance.trainee = self.request.user
+        messages.success(self.request, 'Assignment updated successfully!')
         return super().form_valid(form)
 
+class AssignmentDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = TrainingAssignment
+    template_name = 'assignments/assignment_confirm_delete.html'
+    success_url = reverse_lazy('assignment-list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Assignment deleted successfully!')
+        return super().delete(request, *args, **kwargs)
