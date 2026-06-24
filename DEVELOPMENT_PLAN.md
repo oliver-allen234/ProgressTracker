@@ -31,42 +31,49 @@ Adapting ProgressTracker into **Trackwise**: a dual-purpose web app that functio
 - Implemented `AssignmentListView` to display assignments based on user roles.
 - Added `AssignmentCreateView` for staff to create training assignments.
 - Implemented `AssignmentUpdateView` with role-specific forms for staff and trainees.
+- Implemented `AssignmentDeleteView` for staff to remove assignments.
+- Wired all Training and Assignment views in `tracker/urls.py`.
+- Created all Training templates: `training_list.html`, `training_detail.html`, `training_form.html`, `training_confirm_delete.html`.
+- Created all Assignment templates: `assignment_list.html`, `assignment_form.html`, `assignment_confirm_delete.html`.
+- Updated `base.html` nav to include Training Modules and Assignments links.
+- Fixed `TrainingCreateView`/`TrainingUpdateView` template paths and added `success_url`s.
+- Added `success_url` and messages to `AssignmentCreateView`/`AssignmentUpdateView`.
 
 ---
 
 ## Next Steps
 
 ### 1. Views — Training (admin only for CUD)
-- [ ] `TrainingListView` — all users, no ownership filter
-- [ ] `TrainingDetailView` — all users
-- [ ] `TrainingCreateView` — staff only (`is_staff` check)
-- [ ] `TrainingUpdateView` — staff only
-- [ ] `TrainingDeleteView` — staff only
+- [x] `TrainingListView` — all users, no ownership filter
+- [x] `TrainingDetailView` — all users
+- [x] `TrainingCreateView` — staff only (`is_staff` check)
+- [x] `TrainingUpdateView` — staff only
+- [x] `TrainingDeleteView` — staff only
 
 ### 2. Views — TrainingAssignment (access control core)
-- [ ] `AssignmentListView` — staff see all; regular users filtered to `trainee=request.user`
-- [ ] `AssignmentCreateView` — staff only
-- [ ] `AssignmentUpdateView` — two forms: managers edit all fields, trainees update status only
-- [ ] `AssignmentDeleteView` — staff only
+- [x] `AssignmentListView` — staff see all; regular users filtered to `trainee=request.user`
+- [x] `AssignmentCreateView` — staff only
+- [x] `AssignmentUpdateView` — two forms: managers edit all fields, trainees update status only
+- [x] `AssignmentDeleteView` — staff only
 
 ### 3. Forms
-- [ ] `TrainingForm` — for create/update of Training modules
-- [ ] `AdminAssignmentForm` — full fields for managers
-- [ ] `TraineeStatusForm` — status field only for regular users
+- [x] `TrainingForm` — for create/update of Training modules
+- [x] `AdminAssignmentForm` — full fields for managers
+- [x] `TraineeStatusForm` — status field only for regular users
 
 ### 4. URLs
-- [ ] Wire up all Training and TrainingAssignment views in `tracker/urls.py`
+- [x] Wire up all Training and TrainingAssignment views in `tracker/urls.py`
 
 ### 5. Templates
-- [ ] `training/training_list.html`
-- [ ] `training/training_detail.html`
-- [ ] `training/training_form.html`
-- [ ] `training/training_confirm_delete.html`
-- [ ] `assignments/assignment_list.html`
-- [ ] `assignments/assignment_form.html`
-- [ ] `assignments/assignment_confirm_delete.html`
+- [x] `trainings/training_list.html`
+- [x] `trainings/training_detail.html`
+- [x] `trainings/training_form.html`
+- [x] `trainings/training_confirm_delete.html`
+- [x] `assignments/assignment_list.html`
+- [x] `assignments/assignment_form.html`
+- [x] `assignments/assignment_confirm_delete.html`
 - [ ] Update `dashboard.html` — manager view shows team completion rates
-- [ ] Update `base.html` — add nav links for Training and Assignments
+- [x] Update `base.html` — add nav links for Training and Assignments
 
 ### 6. Manager Dashboard
 - [ ] Team completion rate per training module
