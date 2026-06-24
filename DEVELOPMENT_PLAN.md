@@ -94,10 +94,10 @@ Adapting ProgressTracker into **Trackwise**: a dual-purpose web app that functio
 - [ ] Security tests — CSRF token enforcement (add to report evidence)
 
 ### 9. DevOps Artefacts (Task 3)
-- [ ] GitHub Actions CI workflow (`.github/workflows/django.yml`) — runs tests on push
-- [ ] `Dockerfile` and `docker-compose.yml`
-- [ ] `bandit` security scan — capture output as evidence
-- [ ] `coverage` report
+- [x] GitHub Actions CI workflow (`.github/workflows/django.yml`) — runs tests and bandit on push/PR
+- [x] `Dockerfile` and `docker-compose.yml`
+- [ ] `bandit` security scan — run locally and capture output as report evidence
+- [ ] `coverage` report — run locally and capture output as report evidence
 
 ### 10. Deployment
 - [ ] Confirm PythonAnywhere deployment is live with new models
