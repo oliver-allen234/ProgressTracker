@@ -21,6 +21,19 @@ Adapting ProgressTracker into **Trackwise**: a dual-purpose web app that functio
 
 ---
 
+## Completed Tasks
+
+#### June 25, 2026
+- Implemented `TrainingListView` to display all active training modules for all users.
+- Implemented `TrainingDetailView` to show training details and restrict assignments based on user roles.
+- Added `TrainingForm` for creating and updating `Training` modules.
+- Implemented `TrainingCreateView` and `TrainingUpdateView` for staff to manage training modules.
+- Implemented `AssignmentListView` to display assignments based on user roles.
+- Added `AssignmentCreateView` for staff to create training assignments.
+- Implemented `AssignmentUpdateView` with role-specific forms for staff and trainees.
+
+---
+
 ## Next Steps
 
 ### 1. Views — Training (admin only for CUD)

@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 from django.db.models import Count, Sum, Q
 from django.db import transaction
 
-from .models import UserTask, Goal, Task, HourLog, Profile, Progress
+from .models import UserTask, Goal, Task, HourLog, Profile, Progress, TrainingAssignment, Training
 
 
 class AdminRequiredMixin(UserPassesTestMixin):
@@ -194,6 +194,79 @@ class AdminUserTaskForm(UserTaskForm):
     class Meta(UserTaskForm.Meta):
         fields = ['user'] + UserTaskForm.Meta.fields
 
+class AdminAssignmentForm(forms.ModelForm):
+    class Meta:
+        model = TrainingAssignment
+        fields = ['training', 'trainee', 'due_date', 'notes', 'status']
+        widgets = {
+            'trainee': forms.Select(attrs={'class': 'form-select'}),
+            'due_date': forms.DateInput(attrs={'type': 'date'}),
+            'notes': forms.Textarea(attrs={'rows': 4}),
+            'status': forms.Select(attrs={'class': 'form-select'}),
+            'training': forms.Select(attrs={'class': 'form-select'})
+        }
+
+class TraineeStatusForm(forms.ModelForm):
+    class Meta:
+        model = TrainingAssignment
+        fields = ['status']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+class TrainingForm(forms.ModelForm):
+    class Meta:
+        model = Training
+        fields = ['title', 'description', 'category', 'estimated_hours', 'is_active']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 4}),
+            'estimated_hours': forms.NumberInput(attrs={'step': 0.1}),
+        }
+
+class TrainingListView(LoginRequiredMixin, ListView):
+    model = Training
+    template_name = 'trainings/training_list.html'
+    context_object_name = 'trainings'
+
+    def get_queryset(self):
+        return Training.objects.filter(is_active=True).order_by('-created_at')
+
+class TrainingDetailView(LoginRequiredMixin, DetailView):
+    model = Training
+    template_name = 'trainings/training_detail.html'
+    context_object_name = 'training'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        training = self.get_object()
+        if self.request.user.is_staff:
+            context['assignments'] = TrainingAssignment.objects.filter(training=training).order_by('-assigned_date')
+        else:
+            context['assignments'] = TrainingAssignment.objects.filter(training=training, trainee=self.request.user).order_by('-assigned_date')
+        return context
+
+class TrainingCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    model = Training
+    form_class = TrainingForm
+    template_name = 'training_form.html'
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+class TrainingUpdateView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    model = Training
+    form_class = TrainingForm
+    template_name = 'training_form.html'
+
+class TrainingDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = Training
+    template_name = 'trainings/training_confirm_delete.html'
+    success_url = reverse_lazy('training-list')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, 'Training deleted successfully!')
+        return super().delete(request, *args, **kwargs)
 
 class TaskListView(LoginRequiredMixin, ListView):
     model = UserTask
@@ -214,6 +287,7 @@ class TaskListView(LoginRequiredMixin, ListView):
         ).order_by('due_date', 'created_at')
         context['all_tasks'] = list(context['user_tasks']) + list(context['goal_tasks'])
         return context
+
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
@@ -824,4 +898,42 @@ def task_completion_data(request):
         current += timedelta(days=1)
 
     return JsonResponse(data, safe=False)
+
+
+class AssignmentListView(LoginRequiredMixin, ListView):
+    model = TrainingAssignment
+    template_name = 'assignments/assignment_list.html'
+    context_object_name = 'assignments'
+
+    def get_queryset(self):
+        if self.request.user.is_staff:
+            return TrainingAssignment.objects.all().order_by('-assigned_date')
+        return TrainingAssignment.objects.filter(trainee=self.request.user).order_by('-assigned_date')
+
+class AssignmentCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    model = TrainingAssignment
+    form_class = AdminAssignmentForm
+    template_name = 'assignments/assignment_form.html'
+
+    def form_valid(self, form):
+        form.instance.assigned_by = self.request.user
+        return super().form_valid(form)
+
+class AssignmentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = TrainingAssignment
+    template_name = 'assignments/assignment_form.html'
+
+    def get_form_class(self):
+        if self.request.user.is_staff:
+            return AdminAssignmentForm
+        return TraineeStatusForm
+
+    def test_func(self):
+        assignment = self.get_object()
+        return self.request.user.is_staff or assignment.trainee == self.request.user
+
+    def form_valid(self, form):
+        if not self.request.user.is_staff:
+            form.instance.trainee = self.request.user
+        return super().form_valid(form)
 
