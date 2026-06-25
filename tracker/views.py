@@ -110,9 +110,17 @@ def dashboard(request):
 
     top_users = user_stats[:3] if user_stats else []
 
+    training_summary = {}
     training_stats = []
     team_stats = []
     if request.user.is_staff:
+        all_assignments = TrainingAssignment.objects.all()
+        training_summary = {
+            'total_modules': Training.objects.filter(is_active=True).count(),
+            'total_assignments': all_assignments.count(),
+            'completed': all_assignments.filter(status='COMPLETED').count(),
+            'in_progress': all_assignments.filter(status='IN_PROGRESS').count(),
+        }
         for training in Training.objects.filter(is_active=True):
             total = TrainingAssignment.objects.filter(training=training).count()
             completed = TrainingAssignment.objects.filter(training=training, status='COMPLETED').count()
@@ -148,6 +156,7 @@ def dashboard(request):
         'is_admin': request.user.is_staff,
         'training_stats': training_stats,
         'team_stats': team_stats,
+        'training_summary': training_summary,
     }
 
     return render(request, 'dashboard.html', context)

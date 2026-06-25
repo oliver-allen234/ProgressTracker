@@ -29,18 +29,13 @@
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <li><a class="dropdown-item" href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><h6 class="dropdown-header text-uppercase" style="font-size:0.7rem; letter-spacing:.05em;">Personal</h6></li>
                     <li><a class="dropdown-item" href="{% url 'task-list' %}">Tasks</a></li>
                     <li><a class="dropdown-item" href="{% url 'goal-list' %}">Goals</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
                     <li><a class="dropdown-item" href="{% url 'community' %}">Community</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><h6 class="dropdown-header text-uppercase" style="font-size:0.7rem; letter-spacing:.05em;">Team Training</h6></li>
                     <li><a class="dropdown-item" href="{% url 'training-list' %}">Training Modules</a></li>
                     <li><a class="dropdown-item" href="{% url 'assignment-list' %}">Assignments</a></li>
                 </ul>

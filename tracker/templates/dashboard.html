@@ -38,6 +38,45 @@
                 </div>
 
                 <div class="col-md-4">
+                    {% if is_admin %}
+                    <div class="card text-white bg-danger h-100">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Training Overview</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center g-2">
+                                <div class="col-6">
+                                    <div class="bg-white bg-opacity-25 rounded p-2">
+                                        <h2 class="fw-bold mb-0">{{ training_summary.total_modules }}</h2>
+                                        <small>Active Modules</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-white bg-opacity-25 rounded p-2">
+                                        <h2 class="fw-bold mb-0">{{ training_summary.total_assignments }}</h2>
+                                        <small>Assignments</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-white bg-opacity-25 rounded p-2">
+                                        <h2 class="fw-bold mb-0">{{ training_summary.in_progress }}</h2>
+                                        <small>In Progress</small>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="bg-white bg-opacity-25 rounded p-2">
+                                        <h2 class="fw-bold mb-0">{{ training_summary.completed }}</h2>
+                                        <small>Completed</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex gap-2">
+                            <a href="{% url 'training-list' %}" class="btn btn-outline-light btn-sm">Modules</a>
+                            <a href="{% url 'assignment-list' %}" class="btn btn-outline-light btn-sm">Assignments</a>
+                        </div>
+                    </div>
+                    {% else %}
                     <div class="card text-white bg-info h-100">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Leaderboard</h5>
@@ -49,26 +88,11 @@
                                         <div class="leaderboard-item d-flex align-items-center mb-2 {% if stat.is_current_user %}current-user{% endif %}">
                                             <span class="badge {% if stat.is_current_user %}bg-warning{% else %}bg-primary{% endif %} me-2">{{ forloop.counter }}</span>
                                             <span class="user-name me-2">
-                                            {{ stat.user.username }}
-                                                {% if stat.is_current_user %}
-                                                    <span class="badge bg-warning ms-1">You</span>{% endif %}
-                                        </span>
-                                            <div class="d-flex align-items-center">
-                                                {% if sort_by == 'completed_goals_count' %}
-                                                    <span class="badge bg-success me-2">{{ stat.completed_goals_count }}</span>
-                                                    <span class="text-white">goals completed</span>
-                                                {% elif sort_by == 'total_goals_count' %}
-                                                    <span class="badge bg-success me-2">{{ stat.total_goals_count }}</span>
-                                                    <span class="text-white">goals created</span>
-                                                {% elif sort_by == 'total_hours' %}
-                                                    <span class="badge bg-success me-2">{{ stat.total_hours }}</span>
-                                                    <span class="text-white">hours logged</span>
-                                                {% else %}
-                                                    <span class="badge bg-success me-2">{{ stat.completed_tasks_count }}</span>
-                                                    <span class="text-white">tasks completed</span>
-                                                {% endif %}
-
-                                            </div>
+                                                {{ stat.user.username }}
+                                                {% if stat.is_current_user %}<span class="badge bg-warning ms-1">You</span>{% endif %}
+                                            </span>
+                                            <span class="badge bg-success me-2">{{ stat.completed_tasks_count }}</span>
+                                            <span class="text-white">tasks</span>
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -77,10 +101,10 @@
                             {% endif %}
                         </div>
                         <div class="card-footer">
-                            <a href="{% url 'community' %}" class="btn btn-outline-light btn-sm">View Full
-                                Leaderboard</a>
+                            <a href="{% url 'community' %}" class="btn btn-outline-light btn-sm">View Full Leaderboard</a>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
 
             </div>
