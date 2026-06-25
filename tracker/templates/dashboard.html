@@ -77,31 +77,32 @@
                         </div>
                     </div>
                     {% else %}
-                    <div class="card text-white bg-info h-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Leaderboard</h5>
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="card-title mb-0">My Training Assignments</h5>
                         </div>
-                        <div class="card-body">
-                            {% if top_users %}
-                                <div class="leaderboard-mini">
-                                    {% for stat in top_users %}
-                                        <div class="leaderboard-item d-flex align-items-center mb-2 {% if stat.is_current_user %}current-user{% endif %}">
-                                            <span class="badge {% if stat.is_current_user %}bg-warning{% else %}bg-primary{% endif %} me-2">{{ forloop.counter }}</span>
-                                            <span class="user-name me-2">
-                                                {{ stat.user.username }}
-                                                {% if stat.is_current_user %}<span class="badge bg-warning ms-1">You</span>{% endif %}
+                        <div class="card-body p-0">
+                            {% if my_assignments %}
+                                <ul class="list-group list-group-flush">
+                                    {% for assignment in my_assignments %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span class="text-truncate me-2" style="max-width:180px;">{{ assignment.training.title }}</span>
+                                            <span class="badge
+                                                {% if assignment.status == 'ASSIGNED' %}bg-secondary
+                                                {% elif assignment.status == 'IN_PROGRESS' %}bg-primary
+                                                {% else %}bg-success{% endif %}">
+                                                {{ assignment.get_status_display }}
                                             </span>
-                                            <span class="badge bg-success me-2">{{ stat.completed_tasks_count }}</span>
-                                            <span class="text-white">tasks</span>
-                                        </div>
+                                        </li>
                                     {% endfor %}
-                                </div>
+                                </ul>
                             {% else %}
-                                <p class="text-center">No other users yet.</p>
+                                <p class="p-3 text-muted mb-0">No training assignments yet.</p>
                             {% endif %}
                         </div>
                         <div class="card-footer">
-                            <a href="{% url 'community' %}" class="btn btn-outline-light btn-sm">View Full Leaderboard</a>
+                            <a href="{% url 'assignment-list' %}" class="btn btn-outline-primary btn-sm">View All Assignments</a>
+                            <a href="{% url 'training-list' %}" class="btn btn-outline-secondary btn-sm ms-1">Browse Modules</a>
                         </div>
                     </div>
                     {% endif %}

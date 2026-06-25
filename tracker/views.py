@@ -110,9 +110,15 @@ def dashboard(request):
 
     top_users = user_stats[:3] if user_stats else []
 
+    my_assignments = []
     training_summary = {}
     training_stats = []
     team_stats = []
+    if not request.user.is_staff:
+        my_assignments = TrainingAssignment.objects.filter(
+            trainee=request.user
+        ).select_related('training').order_by('-assigned_date')[:5]
+
     if request.user.is_staff:
         all_assignments = TrainingAssignment.objects.all()
         training_summary = {
@@ -157,6 +163,7 @@ def dashboard(request):
         'training_stats': training_stats,
         'team_stats': team_stats,
         'training_summary': training_summary,
+        'my_assignments': my_assignments,
     }
 
     return render(request, 'dashboard.html', context)
