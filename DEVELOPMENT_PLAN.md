@@ -100,8 +100,8 @@ Adapting ProgressTracker into **Trackwise**: a dual-purpose web app that functio
 - [x] `coverage` report — 22 tests, 59% overall (100% migrations/admin/tests, 39% views)
 
 ### 10. Deployment
-- [ ] Confirm PythonAnywhere deployment is live with new models
-- [ ] Verify live link works for submission
+- [x] Confirm PythonAnywhere deployment is live with new models
+- [x] Verify live link works for submission — https://oliverallen234.pythonanywhere.com
 
 ### 11. Report (Portfolio document)
 - [ ] Task 1 — DevOps overview using CALMS or Three Ways framework
