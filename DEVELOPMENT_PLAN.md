@@ -77,7 +77,7 @@ Adapting ProgressTracker into **Trackwise**: a dual-purpose web app that functio
 
 ### 6. Manager Dashboard
 - [x] Team completion rate per training module
-- [ ] Per-user assignment status overview
+- [x] Per-user assignment status overview (total, in-progress, completed, rate)
 - [ ] Replace competitive leaderboard with compliance summary for staff view
 
 ### 7. OWASP Security (must demonstrate 3+)
@@ -96,8 +96,8 @@ Adapting ProgressTracker into **Trackwise**: a dual-purpose web app that functio
 ### 9. DevOps Artefacts (Task 3)
 - [x] GitHub Actions CI workflow (`.github/workflows/django.yml`) — runs tests and bandit on push/PR
 - [x] `Dockerfile` and `docker-compose.yml`
-- [ ] `bandit` security scan — run locally and capture output as report evidence
-- [ ] `coverage` report — run locally and capture output as report evidence
+- [x] `bandit` security scan — ran locally, 0 issues across 1236 lines
+- [x] `coverage` report — 22 tests, 59% overall (100% migrations/admin/tests, 39% views)
 
 ### 10. Deployment
 - [ ] Confirm PythonAnywhere deployment is live with new models
